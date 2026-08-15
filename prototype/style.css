@@ -1,0 +1,276 @@
+:root {
+  --ink: #172b4d;
+  --muted: #5e6c84;
+  --border: #dfe1e6;
+  --list-bg: #f4f5f7;
+  --board-bg: #f7f8fa;
+  --card-bg: #ffffff;
+  --accent: #3e63dd;
+  --header-bg: #2f3542;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  background: var(--board-bg);
+  color: var(--ink);
+}
+
+.board-header {
+  background: var(--header-bg);
+  padding: 14px 24px;
+}
+
+.board-header h1 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0;
+}
+
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.list {
+  background: var(--list-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 260px;
+  flex: 0 0 260px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list.drag-over {
+  outline: 2px dashed var(--accent);
+  outline-offset: -4px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 4px 6px;
+}
+
+.list-title {
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  width: 100%;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.list-title:focus {
+  outline: 2px solid var(--accent);
+  background: #fff;
+}
+
+.list-delete {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.list-delete:hover {
+  background: #dfe1e6;
+  color: var(--ink);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 8px;
+}
+
+.card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  cursor: grab;
+  box-shadow: 0 1px 0 rgba(9, 30, 66, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card.dragging {
+  opacity: 0.4;
+}
+
+/* ドラッグ中、カードのどちら側に挿入されるかを示す青いライン */
+.card.drop-before::before,
+.card.drop-after::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.card.drop-before::before {
+  top: -6px;
+}
+
+.card.drop-after::after {
+  bottom: -6px;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.card-title {
+  flex: 1;
+  outline: none;
+  word-break: break-word;
+}
+
+.card-title:focus {
+  background: #eef1f5;
+  border-radius: 3px;
+}
+
+.card-delete {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.card-delete:hover {
+  color: #c9372c;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.priority-select {
+  font-size: 11.5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px 8px;
+  cursor: pointer;
+  background: #eef1f5;
+  color: var(--muted);
+}
+
+.priority-select.priority-高 {
+  background: #ffecea;
+  color: #c9372c;
+  border-color: #ffcdc9;
+}
+
+.priority-select.priority-中 {
+  background: #fff7e0;
+  color: #97690a;
+  border-color: #ffe8a3;
+}
+
+.priority-select.priority-低 {
+  background: #e6f5e9;
+  color: #1f7a3f;
+  border-color: #c6e9cd;
+}
+
+.card-date {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sort-bar {
+  display: flex;
+  gap: 6px;
+  padding: 0 4px 4px;
+}
+
+.sort-btn {
+  flex: 1;
+  font-size: 11.5px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.sort-btn:hover {
+  background: #eef1f5;
+  color: var(--ink);
+  border-color: #c9ccd1;
+}
+
+.add-card-btn,
+.add-list-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  text-align: left;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+
+.add-card-btn:hover {
+  background: #dfe1e6;
+  color: var(--ink);
+}
+
+.add-list {
+  flex: 0 0 260px;
+  width: 260px;
+}
+
+.add-list-btn {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border);
+  width: 100%;
+  padding: 10px 12px;
+}
+
+.add-list-btn:hover {
+  background: #fff;
+  color: var(--ink);
+}

@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS list (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    position INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS card (
+    id BIGSERIAL PRIMARY KEY,
+    list_id BIGINT NOT NULL REFERENCES list(id),
+    title VARCHAR(255) NOT NULL,
+    position INTEGER NOT NULL,
+    priority VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT now()
+);

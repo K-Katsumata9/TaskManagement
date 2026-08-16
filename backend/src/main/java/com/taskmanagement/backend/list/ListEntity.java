@@ -30,4 +30,12 @@ public class ListEntity {
 		return position;
 	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
+
 }

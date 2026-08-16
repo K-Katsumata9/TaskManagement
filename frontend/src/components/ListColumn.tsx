@@ -1,7 +1,16 @@
 import type { Card, TaskList } from "../types";
+import { AddCardForm } from "./AddCardForm";
 import { CardItem } from "./CardItem";
 
-export function ListColumn({ list, cards }: { list: TaskList; cards: Card[] }) {
+export function ListColumn({
+  list,
+  cards,
+  onAddCard,
+}: {
+  list: TaskList;
+  cards: Card[];
+  onAddCard: (title: string, priority: string) => Promise<void>;
+}) {
   const sortedCards = [...cards].sort((a, b) => a.position - b.position);
 
   return (
@@ -12,6 +21,7 @@ export function ListColumn({ list, cards }: { list: TaskList; cards: Card[] }) {
           <CardItem key={card.id} card={card} />
         ))}
       </div>
+      <AddCardForm onSubmit={onAddCard} />
     </div>
   );
 }

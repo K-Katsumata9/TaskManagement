@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchCards, fetchLists } from "../api";
+import { createCard, createList, fetchCards, fetchLists } from "../api";
 import type { Card, TaskList } from "../types";
+import { AddListForm } from "./AddListForm";
 import { ListColumn } from "./ListColumn";
 
 export function Board() {
@@ -21,6 +22,16 @@ export function Board() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleAddList = async (title: string) => {
+    const newList = await createList(title);
+    setLists((prev) => [...prev, newList]);
+  };
+
+  const handleAddCard = async (listId: number, title: string, priority: string) => {
+    const newCard = await createCard(listId, title, priority);
+    setCards((prev) => [...prev, newCard]);
+  };
+
   if (loading) {
     return <p className="p-6 text-gray-500">読み込み中...</p>;
   }
@@ -36,14 +47,16 @@ export function Board() {
       <header className="border-b border-gray-200 px-6 py-4">
         <h1 className="text-lg font-bold text-gray-900">タスク管理ボード</h1>
       </header>
-      <main className="flex flex-1 gap-4 overflow-x-auto p-6">
+      <main className="flex flex-1 items-start gap-4 overflow-x-auto p-6">
         {sortedLists.map((list) => (
           <ListColumn
             key={list.id}
             list={list}
             cards={cards.filter((card) => card.listId === list.id)}
+            onAddCard={(title, priority) => handleAddCard(list.id, title, priority)}
           />
         ))}
+        <AddListForm onSubmit={handleAddList} />
       </main>
     </div>
   );

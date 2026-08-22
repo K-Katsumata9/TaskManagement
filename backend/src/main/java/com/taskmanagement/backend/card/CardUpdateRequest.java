@@ -2,6 +2,7 @@ package com.taskmanagement.backend.card;
 
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class CardUpdateRequest {
 
@@ -11,6 +12,7 @@ public class CardUpdateRequest {
 	private String description;
 
 	@NotBlank
+	@Pattern(regexp = "高|中|低")
 	private String priority;
 
 	private LocalDate dueDate;

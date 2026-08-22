@@ -10,9 +10,9 @@ async function fetchJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-async function postJson<T>(path: string, body: unknown): Promise<T> {
+async function sendJson<T>(path: string, method: "POST" | "PUT", body: unknown): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
-    method: "POST",
+    method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
@@ -31,9 +31,17 @@ export function fetchCards(): Promise<Card[]> {
 }
 
 export function createList(title: string): Promise<TaskList> {
-  return postJson<TaskList>("/api/lists", { title });
+  return sendJson<TaskList>("/api/lists", "POST", { title });
 }
 
 export function createCard(listId: number, title: string, priority: string): Promise<Card> {
-  return postJson<Card>("/api/cards", { listId, title, priority });
+  return sendJson<Card>("/api/cards", "POST", { listId, title, priority });
+}
+
+export function updateList(id: number, title: string): Promise<TaskList> {
+  return sendJson<TaskList>(`/api/lists/${id}`, "PUT", { title });
+}
+
+export function updateCard(id: number, title: string, priority: string): Promise<Card> {
+  return sendJson<Card>(`/api/cards/${id}`, "PUT", { title, priority });
 }

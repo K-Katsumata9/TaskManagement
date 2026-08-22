@@ -10,4 +10,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	@Query("SELECT MAX(c.position) FROM Card c WHERE c.listId = :listId")
 	Optional<Integer> findMaxPositionByListId(@Param("listId") Long listId);
 
+	long countByListId(Long listId);
+
 }

@@ -8,10 +8,12 @@ const PRIORITIES = ["高", "中", "低"];
 export function EditCardModal({
   card,
   onSave,
+  onDelete,
   onClose,
 }: {
   card: Card;
   onSave: (input: CardInput) => Promise<void>;
+  onDelete: () => Promise<void>;
   onClose: () => void;
 }) {
   const [title, setTitle] = useState(card.title);
@@ -19,6 +21,7 @@ export function EditCardModal({
   const [priority, setPriority] = useState(card.priority);
   const [dueDate, setDueDate] = useState(card.dueDate ?? "");
   const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +37,17 @@ export function EditCardModal({
       });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm(`カード「${card.title}」を削除しますか？`)) return;
+
+    setDeleting(true);
+    try {
+      await onDelete();
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -73,16 +87,26 @@ export function EditCardModal({
           onChange={(e) => setDueDate(e.target.value)}
           className="rounded border border-gray-300 px-2 py-1 text-sm"
         />
-        <div className="flex gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={submitting || !title.trim()}
+              className="rounded bg-blue-600 px-3 py-1 text-sm text-white disabled:opacity-50"
+            >
+              保存
+            </button>
+            <button type="button" onClick={onClose} className="rounded px-3 py-1 text-sm text-gray-600">
+              キャンセル
+            </button>
+          </div>
           <button
-            type="submit"
-            disabled={submitting || !title.trim()}
-            className="rounded bg-blue-600 px-3 py-1 text-sm text-white disabled:opacity-50"
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="rounded px-3 py-1 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
           >
-            保存
-          </button>
-          <button type="button" onClick={onClose} className="rounded px-3 py-1 text-sm text-gray-600">
-            キャンセル
+            削除
           </button>
         </div>
       </form>

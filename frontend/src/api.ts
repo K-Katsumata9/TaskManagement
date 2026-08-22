@@ -29,6 +29,18 @@ async function sendJson<T>(path: string, method: "POST" | "PUT", body: unknown):
   return response.json() as Promise<T>;
 }
 
+export class DeleteConflictError extends Error {}
+
+async function deleteRequest(path: string): Promise<void> {
+  const response = await fetch(`${API_BASE}${path}`, { method: "DELETE" });
+  if (!response.ok) {
+    if (response.status === 409) {
+      throw new DeleteConflictError(`${path} は削除できません (status: ${response.status})`);
+    }
+    throw new Error(`${path} の削除に失敗しました (status: ${response.status})`);
+  }
+}
+
 export function fetchLists(): Promise<TaskList[]> {
   return fetchJson<TaskList[]>("/api/lists");
 }
@@ -55,4 +67,12 @@ export function updateCard(id: number, input: CardInput): Promise<Card> {
 
 export function reorderCards(listId: number, cardIds: number[]): Promise<Card[]> {
   return sendJson<Card[]>(`/api/lists/${listId}/cards/reorder`, "PUT", { cardIds });
+}
+
+export function deleteCard(id: number): Promise<void> {
+  return deleteRequest(`/api/cards/${id}`);
+}
+
+export function deleteList(id: number): Promise<void> {
+  return deleteRequest(`/api/lists/${id}`);
 }

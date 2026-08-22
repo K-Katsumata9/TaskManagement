@@ -4,6 +4,7 @@ import java.util.List;
 import com.taskmanagement.backend.list.ListRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,16 @@ public class CardController {
 		card.setDueDate(request.getDueDate());
 
 		return cardRepository.save(card);
+	}
+
+	@DeleteMapping("/api/cards/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteCard(@PathVariable Long id) {
+		if (!cardRepository.existsById(id)) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "指定されたidのカードが存在しません");
+		}
+
+		cardRepository.deleteById(id);
 	}
 
 	@PutMapping("/api/lists/{listId}/cards/reorder")

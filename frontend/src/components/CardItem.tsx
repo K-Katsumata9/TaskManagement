@@ -13,13 +13,16 @@ export function CardItem({ card, onClick }: { card: Card; onClick: () => void })
       className="cursor-pointer rounded-md border border-gray-200 bg-white p-3 shadow-sm hover:bg-gray-50"
     >
       <p className="text-sm text-gray-800">{card.title}</p>
-      <span
-        className={`mt-2 inline-block rounded px-2 py-0.5 text-xs ${
-          priorityColor[card.priority] ?? "bg-gray-100 text-gray-700"
-        }`}
-      >
-        {card.priority}
-      </span>
+      <div className="mt-2 flex items-center gap-2">
+        <span
+          className={`inline-block rounded px-2 py-0.5 text-xs ${
+            priorityColor[card.priority] ?? "bg-gray-100 text-gray-700"
+          }`}
+        >
+          {card.priority}
+        </span>
+        {card.dueDate && <span className="text-xs text-gray-500">期限: {card.dueDate}</span>}
+      </div>
     </div>
   );
 }

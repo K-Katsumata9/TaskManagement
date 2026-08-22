@@ -41,7 +41,9 @@ public class CardController {
 		Card card = new Card();
 		card.setListId(request.getListId());
 		card.setTitle(request.getTitle());
+		card.setDescription(request.getDescription());
 		card.setPriority(request.getPriority());
+		card.setDueDate(request.getDueDate());
 		card.setPosition(nextPosition);
 
 		return cardRepository.save(card);
@@ -53,7 +55,9 @@ public class CardController {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "指定されたidのカードが存在しません"));
 
 		card.setTitle(request.getTitle());
+		card.setDescription(request.getDescription());
 		card.setPriority(request.getPriority());
+		card.setDueDate(request.getDueDate());
 
 		return cardRepository.save(card);
 	}

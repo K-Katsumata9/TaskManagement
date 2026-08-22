@@ -1,3 +1,4 @@
+import type { CardInput } from "../api";
 import type { Card, TaskList } from "../types";
 import { AddCardForm } from "./AddCardForm";
 import { CardItem } from "./CardItem";
@@ -11,7 +12,7 @@ export function ListColumn({
 }: {
   list: TaskList;
   cards: Card[];
-  onAddCard: (title: string, priority: string) => Promise<void>;
+  onAddCard: (input: CardInput) => Promise<void>;
   onCardClick: (card: Card) => void;
   onListClick: (list: TaskList) => void;
 }) {

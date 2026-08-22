@@ -62,4 +62,24 @@ public class CardController {
 		return cardRepository.save(card);
 	}
 
+	@PutMapping("/api/lists/{listId}/cards/reorder")
+	public List<Card> reorderCards(@PathVariable Long listId, @Valid @RequestBody CardReorderRequest request) {
+		if (!listRepository.existsById(listId)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "指定されたlistIdのリストが存在しません");
+		}
+
+		List<Card> cards = request.getCardIds().stream()
+				.map(id -> cardRepository.findById(id)
+						.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "指定されたcardIdのカードが存在しません: " + id)))
+				.toList();
+
+		for (int i = 0; i < cards.size(); i++) {
+			Card card = cards.get(i);
+			card.setListId(listId);
+			card.setPosition(i + 1);
+		}
+
+		return cardRepository.saveAll(cards);
+	}
+
 }

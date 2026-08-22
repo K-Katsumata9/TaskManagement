@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { CardInput } from "../api";
 import type { Card } from "../types";
 import { Modal } from "./Modal";
 
@@ -10,11 +11,13 @@ export function EditCardModal({
   onClose,
 }: {
   card: Card;
-  onSave: (title: string, priority: string) => Promise<void>;
+  onSave: (input: CardInput) => Promise<void>;
   onClose: () => void;
 }) {
   const [title, setTitle] = useState(card.title);
+  const [description, setDescription] = useState(card.description ?? "");
   const [priority, setPriority] = useState(card.priority);
+  const [dueDate, setDueDate] = useState(card.dueDate ?? "");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +26,12 @@ export function EditCardModal({
 
     setSubmitting(true);
     try {
-      await onSave(title.trim(), priority);
+      await onSave({
+        title: title.trim(),
+        description: description.trim() ? description.trim() : null,
+        priority,
+        dueDate: dueDate ? dueDate : null,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -41,6 +49,13 @@ export function EditCardModal({
           placeholder="カードのタイトル"
           className="rounded border border-gray-300 px-2 py-1 text-sm"
         />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="詳細（任意）"
+          rows={3}
+          className="rounded border border-gray-300 px-2 py-1 text-sm"
+        />
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
@@ -52,6 +67,12 @@ export function EditCardModal({
             </option>
           ))}
         </select>
+        <input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="rounded border border-gray-300 px-2 py-1 text-sm"
+        />
         <div className="flex gap-2">
           <button
             type="submit"

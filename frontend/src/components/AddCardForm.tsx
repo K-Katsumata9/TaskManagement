@@ -1,21 +1,26 @@
 import { useState } from "react";
+import type { CardInput } from "../api";
 
 const PRIORITIES = ["高", "中", "低"];
 
 export function AddCardForm({
   onSubmit,
 }: {
-  onSubmit: (title: string, priority: string) => Promise<void>;
+  onSubmit: (input: CardInput) => Promise<void>;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(PRIORITIES[1]);
+  const [dueDate, setDueDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const reset = () => {
     setIsEditing(false);
     setTitle("");
+    setDescription("");
     setPriority(PRIORITIES[1]);
+    setDueDate("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,7 +29,12 @@ export function AddCardForm({
 
     setSubmitting(true);
     try {
-      await onSubmit(title.trim(), priority);
+      await onSubmit({
+        title: title.trim(),
+        description: description.trim() ? description.trim() : null,
+        priority,
+        dueDate: dueDate ? dueDate : null,
+      });
       reset();
     } finally {
       setSubmitting(false);
@@ -53,6 +63,13 @@ export function AddCardForm({
         placeholder="カードのタイトル"
         className="rounded border border-gray-300 px-2 py-1 text-sm"
       />
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="詳細（任意）"
+        rows={2}
+        className="rounded border border-gray-300 px-2 py-1 text-sm"
+      />
       <select
         value={priority}
         onChange={(e) => setPriority(e.target.value)}
@@ -64,6 +81,12 @@ export function AddCardForm({
           </option>
         ))}
       </select>
+      <input
+        type="date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+        className="rounded border border-gray-300 px-2 py-1 text-sm"
+      />
       <div className="flex gap-2">
         <button
           type="submit"

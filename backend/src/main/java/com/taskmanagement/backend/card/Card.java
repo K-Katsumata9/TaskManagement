@@ -1,5 +1,6 @@
 package com.taskmanagement.backend.card;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,9 +23,14 @@ public class Card {
 
 	private String title;
 
+	private String description;
+
 	private Integer position;
 
 	private String priority;
+
+	@Column(name = "due_date")
+	private LocalDate dueDate;
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
@@ -41,12 +47,20 @@ public class Card {
 		return title;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
 	public Integer getPosition() {
 		return position;
 	}
 
 	public String getPriority() {
 		return priority;
+	}
+
+	public LocalDate getDueDate() {
+		return dueDate;
 	}
 
 	public LocalDateTime getCreatedAt() {
@@ -61,12 +75,20 @@ public class Card {
 		this.title = title;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public void setPosition(Integer position) {
 		this.position = position;
 	}
 
 	public void setPriority(String priority) {
 		this.priority = priority;
+	}
+
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
 	}
 
 	@PrePersist

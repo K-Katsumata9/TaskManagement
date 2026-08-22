@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createCard, createList, fetchCards, fetchLists, updateCard, updateList } from "../api";
+import { createCard, createList, fetchCards, fetchLists, updateCard, updateList, type CardInput } from "../api";
 import type { Card, TaskList } from "../types";
 import { AddListForm } from "./AddListForm";
 import { EditCardModal } from "./EditCardModal";
@@ -31,14 +31,14 @@ export function Board() {
     setLists((prev) => [...prev, newList]);
   };
 
-  const handleAddCard = async (listId: number, title: string, priority: string) => {
-    const newCard = await createCard(listId, title, priority);
+  const handleAddCard = async (listId: number, input: CardInput) => {
+    const newCard = await createCard(listId, input);
     setCards((prev) => [...prev, newCard]);
   };
 
-  const handleSaveCard = async (title: string, priority: string) => {
+  const handleSaveCard = async (input: CardInput) => {
     if (!editingCard) return;
-    const updated = await updateCard(editingCard.id, title, priority);
+    const updated = await updateCard(editingCard.id, input);
     setCards((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
     setEditingCard(null);
   };
@@ -71,7 +71,7 @@ export function Board() {
             key={list.id}
             list={list}
             cards={cards.filter((card) => card.listId === list.id)}
-            onAddCard={(title, priority) => handleAddCard(list.id, title, priority)}
+            onAddCard={(input) => handleAddCard(list.id, input)}
             onCardClick={setEditingCard}
             onListClick={setEditingList}
           />

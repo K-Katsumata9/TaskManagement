@@ -2,6 +2,13 @@ import type { Card, TaskList } from "./types";
 
 const API_BASE = "http://localhost:8080";
 
+export type CardInput = {
+  title: string;
+  description: string | null;
+  priority: string;
+  dueDate: string | null;
+};
+
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`);
   if (!response.ok) {
@@ -34,14 +41,14 @@ export function createList(title: string): Promise<TaskList> {
   return sendJson<TaskList>("/api/lists", "POST", { title });
 }
 
-export function createCard(listId: number, title: string, priority: string): Promise<Card> {
-  return sendJson<Card>("/api/cards", "POST", { listId, title, priority });
+export function createCard(listId: number, input: CardInput): Promise<Card> {
+  return sendJson<Card>("/api/cards", "POST", { listId, ...input });
 }
 
 export function updateList(id: number, title: string): Promise<TaskList> {
   return sendJson<TaskList>(`/api/lists/${id}`, "PUT", { title });
 }
 
-export function updateCard(id: number, title: string, priority: string): Promise<Card> {
-  return sendJson<Card>(`/api/cards/${id}`, "PUT", { title, priority });
+export function updateCard(id: number, input: CardInput): Promise<Card> {
+  return sendJson<Card>(`/api/cards/${id}`, "PUT", input);
 }

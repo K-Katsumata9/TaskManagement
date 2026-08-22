@@ -52,3 +52,7 @@ export function updateList(id: number, title: string): Promise<TaskList> {
 export function updateCard(id: number, input: CardInput): Promise<Card> {
   return sendJson<Card>(`/api/cards/${id}`, "PUT", input);
 }
+
+export function reorderCards(listId: number, cardIds: number[]): Promise<Card[]> {
+  return sendJson<Card[]>(`/api/lists/${listId}/cards/reorder`, "PUT", { cardIds });
+}

@@ -12,8 +12,11 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { useEffect, useRef, useState } from "react";
 import {
+  DeleteConflictError,
   createCard,
   createList,
+  deleteCard,
+  deleteList,
   fetchCards,
   fetchLists,
   reorderCards,
@@ -77,6 +80,28 @@ export function Board() {
     if (!editingList) return;
     const updated = await updateList(editingList.id, title);
     setLists((prev) => prev.map((l) => (l.id === updated.id ? updated : l)));
+    setEditingList(null);
+  };
+
+  const handleDeleteCard = async () => {
+    if (!editingCard) return;
+    await deleteCard(editingCard.id);
+    setCards((prev) => prev.filter((c) => c.id !== editingCard.id));
+    setEditingCard(null);
+  };
+
+  const handleDeleteList = async () => {
+    if (!editingList) return;
+    try {
+      await deleteList(editingList.id);
+    } catch (err: unknown) {
+      if (err instanceof DeleteConflictError) {
+        window.alert("リスト内にカードが存在するため削除できません");
+        return;
+      }
+      throw err;
+    }
+    setLists((prev) => prev.filter((l) => l.id !== editingList.id));
     setEditingList(null);
   };
 
@@ -239,10 +264,21 @@ export function Board() {
         <DragOverlay>{activeCard && <CardOverlay card={activeCard} />}</DragOverlay>
       </DndContext>
       {editingCard && (
-        <EditCardModal card={editingCard} onSave={handleSaveCard} onClose={() => setEditingCard(null)} />
+        <EditCardModal
+          card={editingCard}
+          onSave={handleSaveCard}
+          onDelete={handleDeleteCard}
+          onClose={() => setEditingCard(null)}
+        />
       )}
       {editingList && (
-        <EditListModal list={editingList} onSave={handleSaveList} onClose={() => setEditingList(null)} />
+        <EditListModal
+          list={editingList}
+          hasCards={cardsOfList(editingList.id).length > 0}
+          onSave={handleSaveList}
+          onDelete={handleDeleteList}
+          onClose={() => setEditingList(null)}
+        />
       )}
     </div>
   );

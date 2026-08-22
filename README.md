@@ -74,5 +74,5 @@ npm run dev
 - [x] リスト・カードの新規作成API（`POST /api/lists`, `POST /api/cards`）とフロントエンドのフォーム
 - [x] カード・リストの編集（`PUT /api/lists/{id}`, `PUT /api/cards/{id}`）とモーダルUI
 - [x] カードへの詳細・期限フィールド追加
-- [ ] カード・リストの削除
+- [x] カード・リストの削除（`DELETE /api/lists/{id}`, `DELETE /api/cards/{id}`。リストはカードが存在する場合は削除不可）
 - [x] ドラッグ&ドロップでの並び替え、優先順位／期限でのソートボタン
